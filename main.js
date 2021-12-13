@@ -265,9 +265,9 @@ function search(){
 }
 
 function previewImage(){
-    let img = getPathToImage(document.getElementById("attachment").value);
-    document.getElementById("imgShow").innerHTML = "";
-    document.getElementById("imgShow").appendChild(img);
+    let img = getPathToImage($("#attachment").val())
+    $("#imgShow").empty();
+    $("#imgShow").append(img);
 }
 
 $(document).ready(function(){
