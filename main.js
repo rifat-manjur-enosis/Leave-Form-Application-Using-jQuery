@@ -225,36 +225,37 @@ function getIndexFromId(selectedId){
 }
 
 function updateRecord(td){
-    slelectedRow = td.parentElement.parentElement;
-    let selectedId = slelectedRow.cells[0].innerHTML;
-    document.getElementById("name").value = slelectedRow.cells[1].innerHTML;
-    if(slelectedRow.cells[2].innerHTML === "Casual"){
-        document.getElementById("casual").checked = true;
-        document.getElementById("sick").checked = false;
+    let selectedRow = $(td).closest("tr");
+    let selectedId = selectedRow.find('td:eq(0)').text();
+    let index =  getIndexFromId(selectedId);
+    $("#name").val(allRequests[index].name);
+    if(allRequests[index].leaveType === "Casual"){
+        $("#casual").prop('checked', true);
+        $("#sick").prop('checked', false);
     }
     else{
-        document.getElementById("casual").checked = false;
-        document.getElementById("sick").checked = true;
+        $("#casual").prop('checked', false);
+        $("#sick").prop('checked', true);
     }   
-    document.getElementById("reason").value = slelectedRow.cells[4].innerHTML;
-    document.getElementById("contact").value = slelectedRow.cells[5].innerHTML;
-    document.getElementById("toDate").value = allRequests[getIndexFromId(selectedId)]["toDate"];
-    document.getElementById("fromDate").value = allRequests[getIndexFromId(selectedId)]["fromDate"];
-    let img = getPathToImage(allRequests[getIndexFromId(selectedId)]["imagePath"]);
-    document.getElementById("imgShow").appendChild(img);
-    updateIndex = getIndexFromId(selectedId);
+    $("#reason").val(allRequests[index].reason);
+    $("#contact").val(allRequests[index].contact);
+    $("#toDate").val(allRequests[index].toDate);
+    $("#fromDate").val(allRequests[index].fromDate);
+    let img = getPathToImage(allRequests[index].imagePath);
+    $("#imgShow").append(img);
+    updateIndex = index;
     updateId = selectedId;        
     updateFlag = true;
     goToFormPage();
 }
 
 function search(){
-    input = $("#searchText").val();
+    let input = $("#searchText").val();
     let filter = input.toLowerCase();
-    ix = 0;
+    let ix = 0;
     let copyRequests = [];
     for(let i=0;i<allRequests.length;i++){
-        str = new String(allRequests[i].name);
+        let str = new String(allRequests[i].name);
         str = str.toLowerCase();
         if(str.match(filter)!=null){
             copyRequests[ix] = allRequests[i];
