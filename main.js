@@ -204,10 +204,11 @@ function sortNone(){
 }
 
 function deleteRecord(td){
-    if (confirm('Are you sure to delete this record?')){
-        slelectedRow = td.parentElement.parentElement;
-        let selectedId = slelectedRow.cells[0].innerHTML;
-        allRequests.splice(getIndexFromId(selectedId), 1);
+    if (confirm('Are you sure you want to delete this record?')){
+        selectedRow = $(td).closest("tr");
+        let selectedId = selectedRow.find('td:eq(0)').text();
+        let index = getIndexFromId(selectedId);
+        allRequests.splice(index, 1);
         allRequestIndex--;
         showListTableContent(allRequests);
     }
@@ -215,8 +216,8 @@ function deleteRecord(td){
 
 function getIndexFromId(selectedId){   
     let index = 0;
-    for(var i=0;i<allRequests.length;i++){   
-        if(allRequests[i]["id"] == selectedId){   
+    for(let i=0;i<allRequests.length;i++){   
+        if(allRequests[i].id == selectedId){   
            index = i;
            break;
         }
