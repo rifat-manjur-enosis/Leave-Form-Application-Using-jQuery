@@ -72,18 +72,6 @@ function showListTableContent(allRequests){
     goToListPage();
 }
 
-function getCheckedLeaveType(){   
-    let leaveTypes = document.getElementsByName('type');
-    let checkedLeaveType = "";
-    for(let i=0;i<leaveTypes.length;i++){
-        if(leaveTypes[i].checked){
-            checkedLeaveType = leaveTypes[i].value;
-            break;
-        }
-    }
-    return checkedLeaveType;
-}
-
 function getLeaveCount(date1, date2){   
     let leaveCount = new Date(date2).getTime() - new Date(date1).getTime();
     leaveCount = leaveCount/(1000 * 3600 * 24);
@@ -100,11 +88,10 @@ function insertRecord(){
     let _fromDate = $("#fromDate").val();
     let _toDate = $("#toDate").val();
     let _leaveCount = getLeaveCount(_fromDate,_toDate);
-    let _leaveType = getCheckedLeaveType();
+    let _leaveType = $("input[name='type']:checked").val()
     let _reason = $("#reason").val();
     let _contact = $("#contact").val();
     let _imagePath = $("#attachment").val();
-    console.log(document.getElementById("imgShow").innerHTML);
     if(_imagePath==="" && updateFlag == true && $("#imgShow").html())
         _imagePath = allRequests[updateIndex].imagePath;
     if(isValid(_name, _fromDate,_toDate,_leaveCount,_leaveType,_reason,_contact,_imagePath)){   
@@ -133,61 +120,59 @@ function insertRecord(){
 }
 
 function showRow(id){
-    id = "#" + id;
     $(id).css("visibility", "visible");
 }
 
 function hideRow(id){
-    id = "#" + id;
     $(id).css("visibility", "collapse");
 }
 
 function isValid(name, from, to, count,type,reason,contact,path){   
     let valid = true;
     if(name===""){
-        showRow("nameRequired");
+        showRow("#nameRequired");
         valid = false;
     }
     else
-        hideRow("nameRequired");
+        hideRow("#nameRequired");
     if(from==="") {
-        showRow("dateRequired");
+        showRow("#dateRequired");
         valid = false;
     }
     else if(to===""){
-        showRow("dateRequired");
+        showRow("#dateRequired");
         valid = false;
     }
     else if(new Date(to) <= new Date(from) ) {
-        showRow("dateRequired");
+        showRow("#dateRequired");
         valid = false;
     }
     else 
-        hideRow("dateRequired");
+        hideRow("#dateRequired");
     if(type==="") {
-        showRow("typeRequired");
+        showRow("#typeRequired");
         valid = false;
     }
     else
-        hideRow("typeRequired");
+        hideRow("#typeRequired");
     if(reason==="") {
-        showRow("reasonRequired");
+        showRow("#reasonRequired");
         valid = false;
     }
     else
-        hideRow("reasonRequired");
+        hideRow("#reasonRequired");
     if(contact==="") {
-        showRow("contactRequired");
+        showRow("#contactRequired");
         valid = false;
     }
     else
-        hideRow("contactRequired");
+        hideRow("#contactRequired");
     if( path==="" ) {
-        showRow("pathRequired");
+        showRow("#pathRequired");
         valid = false;
     }
     else
-        hideRow("pathRequired");
+        hideRow("#pathRequired");
     return valid;
 }
 
@@ -234,13 +219,11 @@ function updateRecord(td){
     let index =  getIndexFromId(selectedId);
     $("#name").val(allRequests[index].name);
     if(allRequests[index].leaveType === "Casual"){
-        $("#casual").prop('checked', true);
-        $("#sick").prop('checked', false);
+        $("input[name='type'][value='Casual']").prop('checked', true);   
     }
     else{
-        $("#casual").prop('checked', false);
-        $("#sick").prop('checked', true);
-    }   
+        $("input[name='type'][value='Sick']").prop('checked', true);   
+    }
     $("#reason").val(allRequests[index].reason);
     $("#contact").val(allRequests[index].contact);
     $("#toDate").val(allRequests[index].toDate);
