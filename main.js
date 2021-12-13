@@ -131,12 +131,14 @@ function insertRecord(){
     }
 }
 
-function showRow(text){
-    document.getElementById(text).style.visibility = "visible";
+function showRow(id){
+    id = "#" + id;
+    $(id).css("visibility", "visible");
 }
 
-function hideRow(text){
-    document.getElementById(text).style.visibility = "collapse";
+function hideRow(id){
+    id = "#" + id;
+    $(id).css("visibility", "collapse");
 }
 
 function isValid(name, from, to, count,type,reason,contact,path){   
