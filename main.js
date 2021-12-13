@@ -263,9 +263,6 @@ function search(){
     }
     showListTableContent(copyRequests);
 }
- 
-const body = document.body;
-body.onload = bindListenerts();
 
 function previewImage(){
     let img = getPathToImage(document.getElementById("attachment").value);
@@ -273,15 +270,14 @@ function previewImage(){
     document.getElementById("imgShow").appendChild(img);
 }
 
-function bindListenerts(){
-  document.getElementById("btnCreateNewLeave").addEventListener("click", createNewLeave);
-  document.getElementById("btnClearForm").addEventListener("click", clearForm);
-  document.getElementById("btnSubmitForm").addEventListener("click", insertRecord);
-  document.getElementById("btnCancelForm").addEventListener("click", goToListPage);
-  document.getElementById("btnAsc").addEventListener("click", sortAsc);
-  document.getElementById("btnDsc").addEventListener("click", sortDsc);
-  document.getElementById("btnNone").addEventListener("click", sortNone);
-  document.getElementById("searchText").addEventListener("keyup", search);
-  document.getElementById("attachment").addEventListener("change", previewImage);
-  document.getElementById("attachment").addEventListener("change", previewImage);
-}
+$(document).ready(function(){
+    $("#btnCreateNewLeave").click(createNewLeave);
+    $("#btnClearForm").click(clearForm);
+    $("#btnSubmitForm").click(insertRecord);
+    $("#btnCancelForm").click(goToListPage);
+    $("#btnAsc").click(sortAsc);
+    $("#btnDsc").click(sortDsc);
+    $("#btnNone").click(sortNone);
+    $("#searchText").keyup(search);
+    $("#attachment").change(previewImage);
+});
