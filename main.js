@@ -96,15 +96,16 @@ function insertRecord(){
         _id = updateId;
     else
         _id = uniqueId;
-    let _name = document.getElementById("name").value;
-    let _fromDate = document.getElementById("fromDate").value;
-    let _toDate = document.getElementById("toDate").value;
+    let _name = $("#name").val();
+    let _fromDate = $("#fromDate").val();
+    let _toDate = $("#toDate").val();
     let _leaveCount = getLeaveCount(_fromDate,_toDate);
     let _leaveType = getCheckedLeaveType();
-    let _reason = document.getElementById("reason").value;
-    let _contact = document.getElementById("contact").value;
-    let _imagePath = document.getElementById("attachment").value;
-    if(_imagePath==="" && updateFlag == true && document.getElementById("imgShow").innerHTML != "")
+    let _reason = $("#reason").val();
+    let _contact = $("#contact").val();
+    let _imagePath = $("#attachment").val();
+    console.log(document.getElementById("imgShow").innerHTML);
+    if(_imagePath==="" && updateFlag == true && $("#imgShow").html())
         _imagePath = allRequests[updateIndex].imagePath;
     if(isValid(_name, _fromDate,_toDate,_leaveCount,_leaveType,_reason,_contact,_imagePath)){   
         const singleRequest = {   
