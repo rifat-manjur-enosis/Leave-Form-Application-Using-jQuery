@@ -5,41 +5,32 @@ let updateFlag = false;
 let updateIndex = 0;
 let updateId = 0;
 
-function showDiv(text){
-    document.getElementById(text).style.display = "block";
-}
-
-function hideDiv(text){
-    document.getElementById(text).style.display = "none";
-}
-
 function goToFormPage(){
-    showDiv("formPage");
-    hideDiv("listPage");
+    $("#formPage").show();
+    $("#listPage").hide();
 }
 
 function goToListPage(){   
     clearForm();
-    showDiv("listPage");
-    hideDiv("formPage");
+    $("#formPage").hide();
+    $("#listPage").show();
 }
 
 function clearForm(){
-    document.getElementById('name').value = '';
-    document.getElementById('fromDate').value = '';
-    document.getElementById('toDate').value = '';
-    document.getElementById('reason').value = '';
-    document.getElementById('casual').checked= false;
-    document.getElementById('sick').checked = false;
-    document.getElementById('attachment').value = '';
-    document.getElementById('contact').value = '';
-    document.getElementById("imgShow").innerHTML = "";
-    hideRow("nameRequired");
-    hideRow("dateRequired");
-    hideRow("typeRequired");
-    hideRow("reasonRequired");
-    hideRow("contactRequired");
-    hideRow("pathRequired");
+    $('#name').val('');
+    $('#fromDate').val('');
+    $('#toDate').val('');
+    $('#reason').val('');
+    $('input[name="type"]').prop('checked', false);
+    $('#attachment').val('');
+    $('#contact').val('');
+    $("#imgShow").empty();
+    hideRow("#nameRequired");
+    hideRow("#dateRequired");
+    hideRow("#typeRequired");
+    hideRow("#reasonRequired");
+    hideRow("#contactRequired");
+    hideRow("#pathRequired");
 }
 
 function createNewLeave(){
@@ -90,7 +81,7 @@ function insertRecord(){
     let _fromDate = $("#fromDate").val();
     let _toDate = $("#toDate").val();
     let _leaveCount = getLeaveCount(_fromDate,_toDate);
-    let _leaveType = $("input[name='type']:checked").val()
+    let _leaveType = $("input[name='type']:checked").val();
     let _reason = $("#reason").val();
     let _contact = $("#contact").val();
     let _imagePath = $("#attachment").val();
@@ -151,7 +142,7 @@ function isValid(name, from, to, count,type,reason,contact,path){
     }
     else 
         hideRow("#dateRequired");
-    if(type==="") {
+    if(typeof(type) ==='undefined') {
         showRow("#typeRequired");
         valid = false;
     }
@@ -239,23 +230,22 @@ function updateRecord(td){
 }
 
 function search(){
-    let input = $("#searchText").val();
-    let filter = input.toLowerCase();
-    let ix = 0;
+    let inputName = $("#searchText").val().toLowerCase();
+    let index = 0;
     let copyRequests = [];
     for(let i=0;i<allRequests.length;i++){
-        let str = new String(allRequests[i].name);
-        str = str.toLowerCase();
-        if(str.match(filter)!=null){
-            copyRequests[ix] = allRequests[i];
-            ix++;
+        let name = allRequests[i].name.toLowerCase();
+        if(name.match(inputName)!=null){
+            copyRequests[index] = allRequests[i];
+            index++;
         }
     }
     showListTableContent(copyRequests);
 }
 
 function previewImage(){
-    let img = getPathToImage($("#attachment").val())
+    let path = $("#attachment").val();
+    let img = getPathToImage(path)
     $("#imgShow").empty();
     $("#imgShow").append(img);
 }
