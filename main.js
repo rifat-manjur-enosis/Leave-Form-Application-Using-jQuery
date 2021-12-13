@@ -48,26 +48,28 @@ function createNewLeave(){
 }
 
 function getPathToImage(path){
-    let img = document.createElement('img'); 
-    img.src = path.substring(12,path.length);
+    let img = new Image();
+    let url = path.substring(12,path.length);
+    img.src = url;
     return img;
 }
 
 function showListTableContent(allRequests){   
-    let rowCount = listTable.rows.length;
-    for (let i=rowCount-1;i>0;i--)
-        listTable.deleteRow(i);
+    $("#listTableBody").empty();
     for(let i=0;i<allRequests.length;i++){   
-        let newRow = document.getElementById('listTable').insertRow(i+1);
-        newRow.insertCell(0).innerHTML = allRequests[i]["id"];
-        newRow.insertCell(1).innerHTML = allRequests[i]["name"];
-        newRow.insertCell(2).innerHTML = allRequests[i]["leaveType"];
-        newRow.insertCell(3).innerHTML = allRequests[i]["leaveCount"];
-        newRow.insertCell(4).innerHTML = allRequests[i]["reason"];
-        newRow.insertCell(5).innerHTML = allRequests[i]["contact"];
-        let img = getPathToImage(allRequests[i]["imagePath"]);
-        newRow.insertCell(6).appendChild(img);
-        newRow.insertCell(7).innerHTML = '<input type="button" value="Update" onclick="updateRecord(this)"/> <input type="button" value="Delete" onclick="deleteRecord(this)"/>';
+        let newRow = '<tr>';
+        newRow += '<td>' + allRequests[i].id + '</td>';
+        newRow += '<td>' + allRequests[i].name + '</td>';
+        newRow += '<td>' + allRequests[i].leaveType + '</td>';
+        newRow += '<td>' + allRequests[i].leaveCount + '</td>';
+        newRow += '<td>' + allRequests[i].reason + '</td>';
+        newRow += '<td>' + allRequests[i].contact + '</td>';
+        newRow += '</tr>';
+        $('#listTableBody').append(newRow);
+        let img = getPathToImage(allRequests[i].imagePath);
+        $('#listTableBody tr:last').append(img);
+        let editDeleteButtont = '<input type="button" value="Update" onclick="updateRecord(this)"/> <input type="button" value="Delete" onclick="deleteRecord(this)"/>';
+        $('#listTableBody tr:last').append('<td>'+editDeleteButtont+'</td>');
     }
     goToListPage();
 }
