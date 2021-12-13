@@ -249,7 +249,7 @@ function updateRecord(td){
 }
 
 function search(){
-    input = document.getElementById("searchText").value;
+    input = $("#searchText").val();
     let filter = input.toLowerCase();
     ix = 0;
     let copyRequests = [];
