@@ -1,0 +1,287 @@
+let allRequests = [];
+let allRequestIndex = 0;
+let uniqueId = 1;
+let updateFlag = false;
+let updateIndex = 0;
+let updateId = 0;
+
+function showDiv(text){
+    document.getElementById(text).style.display = "block";
+}
+
+function hideDiv(text){
+    document.getElementById(text).style.display = "none";
+}
+
+function goToFormPage(){
+    showDiv("formPage");
+    hideDiv("listPage");
+}
+
+function goToListPage(){   
+    clearForm();
+    showDiv("listPage");
+    hideDiv("formPage");
+}
+
+function clearForm(){
+    document.getElementById('name').value = '';
+    document.getElementById('fromDate').value = '';
+    document.getElementById('toDate').value = '';
+    document.getElementById('reason').value = '';
+    document.getElementById('casual').checked= false;
+    document.getElementById('sick').checked = false;
+    document.getElementById('attachment').value = '';
+    document.getElementById('contact').value = '';
+    document.getElementById("imgShow").innerHTML = "";
+    hideRow("nameRequired");
+    hideRow("dateRequired");
+    hideRow("typeRequired");
+    hideRow("reasonRequired");
+    hideRow("contactRequired");
+    hideRow("pathRequired");
+}
+
+function createNewLeave(){
+    clearForm();
+    goToFormPage();
+}
+
+function getPathToImage(path){
+    let img = document.createElement('img'); 
+    img.src = path.substring(12,path.length);
+    return img;
+}
+
+function showListTableContent(allRequests){   
+    let rowCount = listTable.rows.length;
+    for (let i=rowCount-1;i>0;i--)
+        listTable.deleteRow(i);
+    for(let i=0;i<allRequests.length;i++){   
+        let newRow = document.getElementById('listTable').insertRow(i+1);
+        newRow.insertCell(0).innerHTML = allRequests[i]["id"];
+        newRow.insertCell(1).innerHTML = allRequests[i]["name"];
+        newRow.insertCell(2).innerHTML = allRequests[i]["leaveType"];
+        newRow.insertCell(3).innerHTML = allRequests[i]["leaveCount"];
+        newRow.insertCell(4).innerHTML = allRequests[i]["reason"];
+        newRow.insertCell(5).innerHTML = allRequests[i]["contact"];
+        let img = getPathToImage(allRequests[i]["imagePath"]);
+        newRow.insertCell(6).appendChild(img);
+        newRow.insertCell(7).innerHTML = '<input type="button" value="Update" onclick="updateRecord(this)"/> <input type="button" value="Delete" onclick="deleteRecord(this)"/>';
+    }
+    goToListPage();
+}
+
+function getCheckedLeaveType(){   
+    let leaveTypes = document.getElementsByName('type');
+    let checkedLeaveType = "";
+    for(let i=0;i<leaveTypes.length;i++){
+        if(leaveTypes[i].checked){
+            checkedLeaveType = leaveTypes[i].value;
+            break;
+        }
+    }
+    return checkedLeaveType;
+}
+
+function getLeaveCount(date1, date2){   
+    let leaveCount = new Date(date2).getTime() - new Date(date1).getTime();
+    leaveCount = leaveCount/(1000 * 3600 * 24);
+    return leaveCount;
+}
+
+function insertRecord(){   
+    let _id = 0;
+    if(updateFlag)
+        _id = updateId;
+    else
+        _id = uniqueId;
+    let _name = document.getElementById("name").value;
+    let _fromDate = document.getElementById("fromDate").value;
+    let _toDate = document.getElementById("toDate").value;
+    let _leaveCount = getLeaveCount(_fromDate,_toDate);
+    let _leaveType = getCheckedLeaveType();
+    let _reason = document.getElementById("reason").value;
+    let _contact = document.getElementById("contact").value;
+    let _imagePath = document.getElementById("attachment").value;
+    if(_imagePath==="" && updateFlag == true && document.getElementById("imgShow").innerHTML != "")
+        _imagePath = allRequests[updateIndex].imagePath;
+    if(isValid(_name, _fromDate,_toDate,_leaveCount,_leaveType,_reason,_contact,_imagePath)){   
+        const singleRequest = {   
+            id: _id,
+            name: _name,
+            leaveType: _leaveType,
+            leaveCount: _leaveCount,
+            reason: _reason,
+            contact: _contact,
+            imagePath: _imagePath,
+            fromDate: _fromDate,
+            toDate: _toDate
+        };
+        if(updateFlag){   
+            allRequests[updateIndex] = singleRequest;
+            updateFlag = false;
+        }
+        else{
+            allRequests[allRequestIndex] = singleRequest;
+            allRequestIndex++;
+            uniqueId++;
+        }
+        showListTableContent(allRequests);
+    }
+}
+
+function showRow(text){
+    document.getElementById(text).style.visibility = "visible";
+}
+
+function hideRow(text){
+    document.getElementById(text).style.visibility = "collapse";
+}
+
+function isValid(name, from, to, count,type,reason,contact,path){   
+    let valid = true;
+    if(name===""){
+        showRow("nameRequired");
+        valid = false;
+    }
+    else
+        hideRow("nameRequired");
+    if(from==="") {
+        showRow("dateRequired");
+        valid = false;
+    }
+    else if(to===""){
+        showRow("dateRequired");
+        valid = false;
+    }
+    else if(new Date(to) <= new Date(from) ) {
+        showRow("dateRequired");
+        valid = false;
+    }
+    else 
+        hideRow("dateRequired");
+    if(type==="") {
+        showRow("typeRequired");
+        valid = false;
+    }
+    else
+        hideRow("typeRequired");
+    if(reason==="") {
+        showRow("reasonRequired");
+        valid = false;
+    }
+    else
+        hideRow("reasonRequired");
+    if(contact==="") {
+        showRow("contactRequired");
+        valid = false;
+    }
+    else
+        hideRow("contactRequired");
+    if( path==="" ) {
+        showRow("pathRequired");
+        valid = false;
+    }
+    else
+        hideRow("pathRequired");
+    return valid;
+}
+
+function sortAsc(){   
+    allRequests.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+    showListTableContent(allRequests);
+}
+
+function sortDsc(){   
+    allRequests.sort((a, b) => (a.name.toLowerCase()< b.name.toLowerCase()) ? 1 : -1);
+    showListTableContent(allRequests);
+}
+
+function sortNone(){   
+    allRequests.sort((a, b) => (a.id > b.id) ? 1 : -1);
+    showListTableContent(allRequests);
+}
+
+function deleteRecord(td){
+    if (confirm('Are you sure to delete this record?')){
+        slelectedRow = td.parentElement.parentElement;
+        let selectedId = slelectedRow.cells[0].innerHTML;
+        allRequests.splice(getIndexFromId(selectedId), 1);
+        allRequestIndex--;
+        showListTableContent(allRequests);
+    }
+}
+
+function getIndexFromId(selectedId){   
+    let index = 0;
+    for(var i=0;i<allRequests.length;i++){   
+        if(allRequests[i]["id"] == selectedId){   
+           index = i;
+           break;
+        }
+    }
+    return index;
+}
+
+function updateRecord(td){
+    slelectedRow = td.parentElement.parentElement;
+    let selectedId = slelectedRow.cells[0].innerHTML;
+    document.getElementById("name").value = slelectedRow.cells[1].innerHTML;
+    if(slelectedRow.cells[2].innerHTML === "Casual"){
+        document.getElementById("casual").checked = true;
+        document.getElementById("sick").checked = false;
+    }
+    else{
+        document.getElementById("casual").checked = false;
+        document.getElementById("sick").checked = true;
+    }   
+    document.getElementById("reason").value = slelectedRow.cells[4].innerHTML;
+    document.getElementById("contact").value = slelectedRow.cells[5].innerHTML;
+    document.getElementById("toDate").value = allRequests[getIndexFromId(selectedId)]["toDate"];
+    document.getElementById("fromDate").value = allRequests[getIndexFromId(selectedId)]["fromDate"];
+    let img = getPathToImage(allRequests[getIndexFromId(selectedId)]["imagePath"]);
+    document.getElementById("imgShow").appendChild(img);
+    updateIndex = getIndexFromId(selectedId);
+    updateId = selectedId;        
+    updateFlag = true;
+    goToFormPage();
+}
+
+function search(){
+    input = document.getElementById("searchText").value;
+    let filter = input.toLowerCase();
+    ix = 0;
+    let copyRequests = [];
+    for(let i=0;i<allRequests.length;i++){
+        str = new String(allRequests[i].name);
+        str = str.toLowerCase();
+        if(str.match(filter)!=null){
+            copyRequests[ix] = allRequests[i];
+            ix++;
+        }
+    }
+    showListTableContent(copyRequests);
+}
+ 
+const body = document.body;
+body.onload = bindListenerts();
+
+function previewImage(){
+    let img = getPathToImage(document.getElementById("attachment").value);
+    document.getElementById("imgShow").innerHTML = "";
+    document.getElementById("imgShow").appendChild(img);
+}
+
+function bindListenerts(){
+  document.getElementById("btnCreateNewLeave").addEventListener("click", createNewLeave);
+  document.getElementById("btnClearForm").addEventListener("click", clearForm);
+  document.getElementById("btnSubmitForm").addEventListener("click", insertRecord);
+  document.getElementById("btnCancelForm").addEventListener("click", goToListPage);
+  document.getElementById("btnAsc").addEventListener("click", sortAsc);
+  document.getElementById("btnDsc").addEventListener("click", sortDsc);
+  document.getElementById("btnNone").addEventListener("click", sortNone);
+  document.getElementById("searchText").addEventListener("keyup", search);
+  document.getElementById("attachment").addEventListener("change", previewImage);
+  document.getElementById("attachment").addEventListener("change", previewImage);
+}

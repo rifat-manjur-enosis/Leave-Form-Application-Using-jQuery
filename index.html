@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Leave Request</title>
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <center>
+                <div id="formPage">
+                    <table id="formTable" border="2" class="table">  
+                        <form>
+                            <h1>Request for Leave</h1>
+                            <tr>
+                                <td>Name*</td>
+                                <td colspan="2"><input type="text" name="empName" id="name"></td>
+                                <td><p class="required" id="nameRequired">*This field is required.</p></td>
+                            </tr>
+                            <tr>
+                                <td>Date*</td>
+                                <td>From <input type="date" name="fromDate" id="fromDate"></td>
+                                <td>To <input type="date" name="toDate" id="toDate"></td>
+                                <td><p class="required" id="dateRequired">*Invalid date.</p></td>
+                            </tr>
+                            <tr>
+                                <td>Type*</td>
+                                <td>
+                                    <input type="radio" name="type" id="casual" value="Casual">
+                                    <label for="casual">Casual</label>
+                                    <input type="radio" name="type" id="sick" value="Sick">
+                                    <label for="sick">Sick</label><br>
+                                </td>
+                                <td><p class="required" id="typeRequired">*This field is required.</p></td>
+                            </tr>
+                            <tr>
+                                <td>Reason*</td>
+                                <td colspan="2"><input type="text" name="reason" id="reason"></td>
+                                <td><p class="required" id="reasonRequired">*This field is required.</p></td>
+                            </tr>
+                            <tr>
+                                <td>Emargency Contact*</td>
+                                <td colspan="2"><input type="text" name="contact" id="contact"></td>
+                                <td><p class="required" id="contactRequired">*This field is required.</p></td>
+                            </tr>
+                            <tr>
+                                <td>Attachment*</td>
+                                <td colspan="2"><input type="file" name="attachment" id="attachment"></td>
+                                <td><p class="required" id="pathRequired">*This field is required.</p></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><p id="imgShow"></p></td>
+                                <td>
+                                    <input type="button" name="btnClearForm" id="btnClearForm" value="Clear">
+                                    <input type="button" name="btnSubmitForm" id="btnSubmitForm" value="Submit">
+                                    <input type="button" name="btnCancelForm" id="btnCancelForm" value="Cancel">
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+                </div>
+                <div id = "listPage">
+                    <input type="text" id="searchText" placeholder="Name">
+                    <button class="sort" id="btnAsc">Sort Ascending</button> 
+                    <button class="sort" id="btnDsc">Sort Descending</button>
+                    <button class="sort" id="btnNone">Sort None</button>
+                    <table id="listTable" border="1" class="table">
+                        <thead>
+                            <tr>
+                                <th>Unique ID</th>
+                                <th>Employee Name</th>
+                                <th>Leave Type</th>
+                                <th>Leave Count</th>
+                                <th>Reason</th>
+                                <th>Emargency Contact</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <input type="button" name="btnCreateNewLeave" id="btnCreateNewLeave" value="Create New Leave">
+                </div>
+            </center>
+            <script src = main.js></script>
+        </body>
+    </html>
